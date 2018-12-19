@@ -73,5 +73,31 @@ public class EthereumController {
 		String ret = assets.viewAssetsBasedOnOwner(new BigInteger(assetId)).send();
 		return ret;
 	}
+	
+	
+	@RequestMapping(value="/intendForSale", method = RequestMethod.POST)
+	public TransactionReceipt intendForSale(@RequestParam("assetId") String assetId,@RequestParam("seller") String seller) throws Exception{
+		Web3j web3 = Web3j.build(new HttpService());
+		//String account = web3.ethAccounts().send().getAccounts().get(2);
+		//System.out.println("My acccount is " + account);
+		System.out.println("Asset Id " + assetId + "Contract Address " + contractAddress + " Contract Owner " + contractOwner);
+		LandAssets assets = LandAssets.load(contractAddress, web3, Credentials.create(contractOwner), 
+				new BigInteger("0"), new BigInteger("167749")); 
+		TransactionReceipt receipt = assets.intendToSell(seller, new BigInteger(assetId)).send();
+		return receipt;
+	}
+	
+	
+	@RequestMapping(value="/transferAsset", method = RequestMethod.POST)
+	public TransactionReceipt transferAsset(@RequestParam("assetId") String assetId,@RequestParam("seller") String seller,@RequestParam("buyer") String buyer,@RequestParam("registrar") String registrar) throws Exception{
+		Web3j web3 = Web3j.build(new HttpService());
+		//String account = web3.ethAccounts().send().getAccounts().get(2);
+		//System.out.println("My acccount is " + account);
+		System.out.println("Asset Id " + assetId + "Contract Address " + contractAddress + " Contract Owner " + contractOwner);
+		LandAssets assets = LandAssets.load(contractAddress, web3, Credentials.create(contractOwner), 
+				new BigInteger("0"), new BigInteger("167749")); 
+		TransactionReceipt receipt = assets.transferAssets(seller, buyer, registrar, new BigInteger(assetId), new BigInteger("3")).send();
+		return receipt;
+	}
 
 }
